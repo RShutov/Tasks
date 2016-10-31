@@ -14,18 +14,22 @@ namespace Genetic
     {
         public static int drawableWidth = 400;
         public static int drawableHeight = 300;
-
+		private bool closed;
         private Bitmap resultBitmap;
         public delegate void ChangedEventHandler(object sender, EventArgs e);
         public event ChangedEventHandler OnRun;
         public event ChangedEventHandler OnClose;
-        public Bitmap imageTarget;
+		public event ChangedEventHandler OnContinue;
+		public event ChangedEventHandler OnPause;
+		public Bitmap imageTarget;
         public Bitmap DrawArea { get; set; }
 
         public MainForm()
         {
             InitializeComponent();
-        }
+			closed = false;
+
+		}
 
         public void createResultImage()
         {
@@ -47,7 +51,11 @@ namespace Genetic
 
         public void ChangeStatus(string status)
         {
-            statusStrip.Invoke(new Action(() => { statusStrip.Items[0].Text = status; }));
+			if(!closed) {
+				statusStrip.Invoke(new Action(() => {
+					statusStrip.Items[0].Text = status;
+				}));
+			}
         }
 
         public void SetImage(Bitmap b)
@@ -67,16 +75,41 @@ namespace Genetic
             openFileDialog.ShowDialog();
         }
 
-        private void запускToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RunToolStripMenuItem_Click(object sender, EventArgs e)
         {
+			runToolStripMenuItem.Enabled = false;
+			pauseToolStripMenuItem.Enabled = true;
             OnRun?.Invoke(sender, e);
+
         }
 
         protected override void OnClosed(EventArgs e)
-        {     
-            base.OnClosed(e);
-            OnClose?.Invoke(this, e);
+        {
+			OnClose?.Invoke(this, e);
+			base.OnClosed(e);
+			closed = true;
+			
             
         }
-    }
+
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			actionToolStripMenuItem.Visible = false;
+		}
+
+		private void continueToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			pauseToolStripMenuItem.Text = "Пауза";
+			pauseToolStripMenuItem.Click -= continueToolStripMenuItem_Click;
+			pauseToolStripMenuItem.Click += pauseToolStripMenuItem_Click;
+			OnContinue?.Invoke(sender, e);
+		}
+		private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			pauseToolStripMenuItem.Text = "Продолжить";
+			pauseToolStripMenuItem.Click -= pauseToolStripMenuItem_Click;
+			pauseToolStripMenuItem.Click += continueToolStripMenuItem_Click;
+			OnPause?.Invoke(sender, e);
+		}
+	}
 }

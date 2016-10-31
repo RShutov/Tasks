@@ -29,7 +29,9 @@ namespace Genetic
                 exp.OnDraw += (b) => {mainForm.SetImage(b); mainForm.Invalidate(); };
                 exp.OnStatusChanged += mainForm.ChangeStatus;
                 mainForm.OnClose += exp.OnClose;
-                exp.setTarget(mainForm.imageTarget);
+				mainForm.OnContinue += exp.Continue;
+				mainForm.OnPause += exp.Pause;
+				exp.setTarget(mainForm.imageTarget);
                 exp.Run(); 
             };
             Application.Run(mainForm);

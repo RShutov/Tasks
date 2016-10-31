@@ -11,6 +11,14 @@ using System.Threading.Tasks;
 
 namespace Genetic
 {
+	public enum ExperimentStatus
+	{
+		Init,
+		Running,
+		Pausing,
+		Closing,
+	}
+
    public class Experiment
     {
         private int oldValue;
@@ -21,12 +29,24 @@ namespace Genetic
 
         public Bitmap drawable { get; set; }
         private string status;
+		private ExperimentStatus experimentStatus;
 
-        Population<Polygon, int, Bitmap> population;
+		Population<Polygon, int, Bitmap> population;
         private Bitmap target;
 
-        public Experiment()
+		public void Pause(object sender, EventArgs e)
+		{
+			experimentStatus = ExperimentStatus.Pausing;
+		}
+
+		public void Continue(object sender, EventArgs e)
+		{
+			experimentStatus = ExperimentStatus.Running;
+		}
+
+		public Experiment()
         {
+			experimentStatus = ExperimentStatus.Init;
         }
 
         public KeyValuePair<int, Individual<Polygon>> getBest()
@@ -52,11 +72,9 @@ namespace Genetic
             }
         }
 
-        public bool IsClosed { get; private set; }
-
         internal void OnClose(object sender, EventArgs e)
         {
-            this.IsClosed = true;
+			experimentStatus = ExperimentStatus.Closing;
         }
 
         public static int Fitness(Individual<Polygon> popul, Bitmap t)
@@ -97,27 +115,33 @@ namespace Genetic
             target = b;           
         }
 
-        public void MakeEvolution()
-        {
-            int i = 0;
+			public void MakeEvolution()
+			{
+			int i = 0;
 			while(true)
 			{
-               if(IsClosed) {
-                   return;
-                }
+				switch(experimentStatus) {
+					case ExperimentStatus.Closing:
+						return;
+					case ExperimentStatus.Pausing:
+						continue;
+					case ExperimentStatus.Running:
+						break;
+				}
 
-                population.Evolve();
+				population.Evolve();
 				Status = string.Format("step {0} , fitness: {1}", i, population.First().Key);
 				Debug.Print(Status);
 				oldValue = getBest().Key;
 				Draw();
-                i++;
+				i++;
 			}
 		}
 
 		public void Run()
 		{
-            population = new Population<Polygon, int, Bitmap>(
+			experimentStatus = ExperimentStatus.Running;
+			population = new Population<Polygon, int, Bitmap>(
                 (popul) => { return Fitness(popul, target); },
                  (x, y) => {
                      int result = x.CompareTo(y);
