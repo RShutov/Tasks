@@ -2,33 +2,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace Genetic
 {
-    public class Individual<T> where T: GeneticObject<T>
-    {
-        private List<T> components;
-        public IIndividualsGenerator<T> generator ;
+	public class Individual<T> where T: GeneticObject<T>
+	{
+		private List<T> components;
+		public IIndividualsGenerator<T> generator ;
 
-        public Individual(IIndividualsGenerator<T> generator)
-        {
-            this.generator = generator;
-            components = new List<T>();
-        }
+		public Individual(IIndividualsGenerator<T> generator)
+		{
+			this.generator = generator;
+			components = new List<T>();
+		}
 
-        public Individual(List<T> population, IIndividualsGenerator<T> generator)
-        {
-            this.components = population;
-            this.generator = generator;
-        }
+		public Individual(List<T> population, IIndividualsGenerator<T> generator)
+		{
+			this.components = population;
+			this.generator = generator;
+		}
 
-        public List<T> ToList()
-        {
-            return components;
-        }
+		public List<T> ToList()
+		{
+			return components;
+		}
 
 		public Individual<T> Clone()
 		{
@@ -40,79 +38,59 @@ namespace Genetic
 		}
 
 		public void Evolve()
-        {
+		{
 			Random r = new Random(Guid.NewGuid().GetHashCode());
-			/*var newComponents = new List<T>();
-            foreach (var elem in components.ToList())
-            {
-                newComponents.Add((T)elem.Copy());
-            }*/
-            foreach (IGenetic elem in components)
-            {
-               var el = elem;
-               if(r.NextDouble() <= ExperimentConsts.MutationProbability)
-               {
-                    elem.Mutate();
-               }
-            }
+			foreach (IGenetic elem in components)
+			{
+				var el = elem;
+				if(r.NextDouble() <= ExperimentConsts.MutationProbability) {
+					elem.Mutate();
+				}
+			}
+		}
 
-            /*if (r.NextDouble() <= ExperimentConsts.AddChance)
-            {
-                newComponents.Add((generator.generate(new Random().Next())));
-            }
+		public void generate(int count)
+		{
+			components = new List<T>();
+			for(int i=0; i< count; i++) {
+				components.Add(generator.generate(Guid.NewGuid().GetHashCode()));
+			}
+		}
 
-            if (r.NextDouble() <= ExperimentConsts.MutationProbability)
-            {
-                newComponents.RemoveAt(new Random().Next(0, newComponents.Count-1));
-            }*/
-           // return new Individual<T>(newComponents, generator);
-        }
+		public Bitmap ToBitmap(int width, int height)
+		{
+			Bitmap b = new Bitmap(width, height);
+			var g = Graphics.FromImage(b);
+			Draw(g);
+			return b;
+		}
 
-        public void generate(int count)
-        {
-            components = new List<T>();
-            for(int i=0; i< count; i++)
-            {
-                components.Add(generator.generate(Guid.NewGuid().GetHashCode()));
-            }
-        }
+		internal void Draw(Graphics g)
+		{
+			foreach (var elem in components)
+			{
+				elem.Draw(g);
+			};
+		}
 
-        public Bitmap ToBitmap(int width, int height)
-        {
-            Bitmap b = new Bitmap(width, height);
-            var g = Graphics.FromImage(b);
-            Draw(g);
-            return b;
+		internal void Dispose()
+		{
+			components.Clear();
+		}
 
-        }
-        internal void Draw(Graphics g)
-        {
-            foreach (var elem in components)
-            {
-                elem.Draw(g);
-            };
-        }
+		private void Add(T item)
+		{
+			this.components.Add(item);
+		}
 
-        internal void Dispose()
-        {
-            components.Clear();
-        }
-
-        private void Add(T item)
-        {
-            this.components.Add(item);
-        }
-
-        public Individual<T> CrossingOver(Individual<T> individual1, Individual<T> individual2)
-        {
-            
-            var individual = new Individual<T>(individual1.generator);
-            for(int i =0; i < ExperimentConsts.PrimitivesCapacity; i++)
-            {
-                individual.Add(
-                    individual1.components[0].CrossingOver(individual1.components[i], individual2.components[i]));
-            }
-            return individual;
-        }
-    }
+		public Individual<T> CrossingOver(Individual<T> individual1, Individual<T> individual2)
+		{
+			var individual = new Individual<T>(individual1.generator);
+			for(int i =0; i < ExperimentConsts.PrimitivesCapacity; i++) {
+				individual.Add(
+				individual1.components[0].CrossingOver(individual1.components[i], individual2.components[i]));
+			}
+			return individual;
+		}
+	}
 }
