@@ -15,7 +15,7 @@ namespace Genetic.Core
 		private SortedList<TFitnesResult, Individual<T>> population;
 		private SortedList<TFitnesResult, Individual<T>> newPopulation;
 		private Func<Individual<T>, TFitnesResult> fitness;
-		private int elemPerThread = ExperimentConsts.PopulationCapacity / ExperimentConsts.ThreadsCount;
+		private int elemPerThread = (ExperimentConsts.PopulationCapacity - ExperimentConsts.AliveCount) / ExperimentConsts.ThreadsCount;
 		private Comparison<TFitnesResult> comparator;
 		private IIndividualsGenerator<T> generator;
 

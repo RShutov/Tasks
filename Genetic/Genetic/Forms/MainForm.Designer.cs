@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Genetic
@@ -46,6 +47,7 @@ namespace Genetic
                 //Width += 2*imageTarget.Width + (tableLayoutPanel1.Margin.Left + tableLayoutPanel1.Margin.Right) + (tableLayoutPanel1.Padding.Left + tableLayoutPanel1.Padding.Right);
                 //Height += imageTarget.Height + 100;
             };
+			
             openFileDialog.FileOk += (s, ev) => { menuStrip.Items[1].Visible = true; };
             //this.runButton.Click += (s, e) => { OnRun?.Invoke(s, e); };
         }
@@ -67,9 +69,11 @@ namespace Genetic
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.pictureWrapper.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.originalImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultImage)).BeginInit();
@@ -121,7 +125,8 @@ namespace Genetic
 			// openFileToolStripMenuItem
 			// 
 			this.openFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem});
+            this.openToolStripMenuItem,
+            this.saveToolStripMenuItem});
 			this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
 			resources.ApplyResources(this.openFileToolStripMenuItem, "openFileToolStripMenuItem");
 			// 
@@ -130,6 +135,12 @@ namespace Genetic
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			resources.ApplyResources(this.openToolStripMenuItem, "openToolStripMenuItem");
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			// 
+			// saveToolStripMenuItem
+			// 
+			resources.ApplyResources(this.saveToolStripMenuItem, "saveToolStripMenuItem");
+			this.saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
+			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			// 
 			// actionToolStripMenuItem
 			// 
@@ -150,6 +161,11 @@ namespace Genetic
 			resources.ApplyResources(this.pauseToolStripMenuItem, "pauseToolStripMenuItem");
 			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
 			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
+			// 
+			// saveFileDialog
+			// 
+			this.saveFileDialog.DefaultExt = "*.png";
+			resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
 			// 
 			// MainForm
 			// 
@@ -193,6 +209,8 @@ namespace Genetic
         private ToolStripMenuItem actionToolStripMenuItem;
         private ToolStripMenuItem runToolStripMenuItem;
 		private ToolStripMenuItem pauseToolStripMenuItem;
+		private ToolStripMenuItem saveToolStripMenuItem;
+		private SaveFileDialog saveFileDialog;
 	}
 }
 

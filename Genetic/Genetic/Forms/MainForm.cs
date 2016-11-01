@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Genetic
-{	public partial class MainForm : Form	{		public static int drawableWidth = 400;		public static int drawableHeight = 300;
-		private bool closed;		private Bitmap resultBitmap;		public delegate void ChangedEventHandler(object sender, EventArgs e);		public event ChangedEventHandler OnRun;		public event ChangedEventHandler OnClose;
+{	public partial class MainForm : Form	{		public static int drawableWidth = 400;		public static int drawableHeight = 300;		private Bitmap resultBitmap;		public delegate void ChangedEventHandler(object sender, EventArgs e);		public event ChangedEventHandler OnRun;		public event ChangedEventHandler OnClose;
 		public event ChangedEventHandler OnContinue;
 		public event ChangedEventHandler OnPause;
 		public Bitmap imageTarget;		public Bitmap DrawArea { get; set; }
 		public MainForm()		{			InitializeComponent();
-			closed = false;
 		}	
 		public void createResultImage()		{			resultBitmap = new Bitmap(originalImage.Image.Width, originalImage.Image.Height);			resultImage.Image = resultBitmap;		}
 		public Bitmap getResultBitmap()		{			return resultBitmap;		}
@@ -20,7 +19,7 @@ namespace Genetic
 					statusStrip.Items[0].Text = status;
 				}));
 			}		}
-		public void SetImage(Bitmap b)		{			resultImage.Size = new System.Drawing.Size(drawableWidth, drawableHeight);			resultImage.SizeMode = PictureBoxSizeMode.StretchImage;			resultImage.Image = b;		}
+		public void SetImage(Bitmap b)		{			resultBitmap = b;			resultImage.Size = new System.Drawing.Size(drawableWidth, drawableHeight);			resultImage.SizeMode = PictureBoxSizeMode.StretchImage;			resultImage.Image = b;		}
 		internal Bitmap getTarget()		{			return new Bitmap(originalImage.Image);		}
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)		{			openFileDialog.ShowDialog();		}
 		private void RunToolStripMenuItem_Click(object sender, EventArgs e)		{
@@ -28,8 +27,7 @@ namespace Genetic
 			pauseToolStripMenuItem.Enabled = true;			OnRun?.Invoke(sender, e);		}
 		protected override void OnClosed(EventArgs e)		{
 			OnClose?.Invoke(this, e);
-			base.OnClosed(e);
-			closed = true; 		}
+			base.OnClosed(e);		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
@@ -50,6 +48,29 @@ namespace Genetic
 			pauseToolStripMenuItem.Click -= pauseToolStripMenuItem_Click;
 			pauseToolStripMenuItem.Click += continueToolStripMenuItem_Click;
 			OnPause?.Invoke(sender, e);
+			saveToolStripMenuItem.Enabled = true;
+		}
+
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+			saveFileDialog.Filter = "image files (*.png)|*.bmp|All files (*.*)|*.*";
+			saveFileDialog.FilterIndex = 2;
+			saveFileDialog.RestoreDirectory = true;
+
+			if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+				//if ((myStream = saveFileDialog.OpenFile()) != null) {
+					// Code to write the stream goes here.
+					resultBitmap.Save(saveFileDialog.FileName);
+					//myStream.Close();
+				//}
+			}
+		}
+
+		private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+
 		}
 	}
 }
