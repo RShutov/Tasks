@@ -28,6 +28,7 @@ namespace Genetic
 				mainForm.SetStatusBinding(exp);
 				exp.OnDraw += (b) => {mainForm.SetImage(b); mainForm.Invalidate(); };
 				exp.OnStatusChanged += mainForm.ChangeStatus;
+				mainForm.setOnSave(exp.getPopulation);
 				mainForm.OnClose += exp.OnClose;
 				mainForm.OnContinue += exp.Continue;
 				mainForm.OnPause += exp.Pause;

@@ -171,5 +171,10 @@ namespace Genetic
 			this.height = height;
 			drawable = new Bitmap(width, height);
 		}
+
+		public Population<Polygon, int, Bitmap> getPopulation()
+		{
+			return this.population;
+		}
 	}
 }

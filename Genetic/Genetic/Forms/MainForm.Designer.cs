@@ -74,6 +74,8 @@ namespace Genetic
 			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+			this.openResultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveResultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pictureWrapper.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.originalImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultImage)).BeginInit();
@@ -126,7 +128,9 @@ namespace Genetic
 			// 
 			this.openFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.saveToolStripMenuItem,
+            this.openResultToolStripMenuItem,
+            this.saveResultToolStripMenuItem});
 			this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
 			resources.ApplyResources(this.openFileToolStripMenuItem, "openFileToolStripMenuItem");
 			// 
@@ -139,7 +143,6 @@ namespace Genetic
 			// saveToolStripMenuItem
 			// 
 			resources.ApplyResources(this.saveToolStripMenuItem, "saveToolStripMenuItem");
-			this.saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			// 
 			// actionToolStripMenuItem
@@ -166,6 +169,18 @@ namespace Genetic
 			// 
 			this.saveFileDialog.DefaultExt = "*.png";
 			resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
+			// 
+			// openResultToolStripMenuItem
+			// 
+			resources.ApplyResources(this.openResultToolStripMenuItem, "openResultToolStripMenuItem");
+			this.openResultToolStripMenuItem.Name = "openResultToolStripMenuItem";
+			this.openResultToolStripMenuItem.Click += new System.EventHandler(this.openResultToolStripMenuItem_Click);
+			// 
+			// saveResultToolStripMenuItem
+			// 
+			this.saveResultToolStripMenuItem.Name = "saveResultToolStripMenuItem";
+			resources.ApplyResources(this.saveResultToolStripMenuItem, "saveResultToolStripMenuItem");
+			this.saveResultToolStripMenuItem.Click += new System.EventHandler(this.saveResultToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -211,6 +226,8 @@ namespace Genetic
 		private ToolStripMenuItem pauseToolStripMenuItem;
 		private ToolStripMenuItem saveToolStripMenuItem;
 		private SaveFileDialog saveFileDialog;
+		private ToolStripMenuItem openResultToolStripMenuItem;
+		private ToolStripMenuItem saveResultToolStripMenuItem;
 	}
 }
 

@@ -7,14 +7,14 @@ using System.Collections;
 
 namespace Genetic.Core
 {
-	partial class Population<T, TFitnesResult, TTarget> : IEnumerable<KeyValuePair<TFitnesResult, Individual<T>>>
+	public partial class Population<T, TFitnesResult, TTarget> : IEnumerable<KeyValuePair<TFitnesResult, Individual<T>>>
 	{ }
 
-	partial class Population<T, TFitnesResult, TTarget>  where T : GeneticObject<T>
+	public partial class Population<T, TFitnesResult, TTarget>  where T : GeneticObject<T>
 	{
 		private SortedList<TFitnesResult, Individual<T>> population;
 		private SortedList<TFitnesResult, Individual<T>> newPopulation;
-		private Func<Individual<T>, TFitnesResult> fitness;
+		private  Func<Individual<T>, TFitnesResult> fitness;
 		private int elemPerThread = (ExperimentConsts.PopulationCapacity - ExperimentConsts.AliveCount) / ExperimentConsts.ThreadsCount;
 		private Comparison<TFitnesResult> comparator;
 		private IIndividualsGenerator<T> generator;
