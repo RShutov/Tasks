@@ -60,3 +60,13 @@ ContourDetection/ContourDetection/bin/Debug/ContourDetection.vshost.exe.manifest
 ContourDetection/ContourDetection/obj/Debug/ContourDetection.ConourDetectionForm.resources
 ContourDetection/ContourDetection/obj/Debug/ContourDetection.Properties.Resources.resources
 ContourDetection/ContourDetection/obj/Debug/ContourDetection.csproj.FileListAbsolute.txt
+ContourDetection/ContourDetection/bin/Debug/ContourDetection.exe
+*.pdb
+ContourDetection/ContourDetection/bin/Debug/ContourDetection.vshost.exe
+ContourDetection/.vs/ContourDetection/v14/.suo
+*.TMP
+ContourDetection/ContourDetection/obj/Debug/ContourDetection.csproj.GenerateResource.Cache
+*.cache
+ContourDetection/ContourDetection/obj/Debug/ContourDetection.exe
+Genetic/.vs/Genetic/v14/.suo
+*.exe

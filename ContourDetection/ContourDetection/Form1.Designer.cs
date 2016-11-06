@@ -41,9 +41,10 @@
 			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBox1.Location = new System.Drawing.Point(13, 13);
+			this.pictureBox1.Location = new System.Drawing.Point(12, 28);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(241, 213);
+			this.pictureBox1.Size = new System.Drawing.Size(1, 1);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			// 
@@ -53,7 +54,7 @@
             this.toolStripDropDownButton1});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(266, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(120, 25);
 			this.toolStrip1.TabIndex = 1;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -72,7 +73,7 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
@@ -80,7 +81,9 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(266, 238);
+			this.AutoSize = true;
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.ClientSize = new System.Drawing.Size(120, 33);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.pictureBox1);
 			this.Name = "ConourDetectionForm";
