@@ -23,7 +23,7 @@ namespace ContourDetection
 			height = target.Height;
 		}
 		
-		private void AdaptThreshold(ref byte[] b, int x, int y, ref byte[] newB)
+		private void AdaptThreshold(ref byte[] b, int x, int y, ref byte[] newB, ref bool[,] mask)
 		{
 			
 			var originalCoord = (y * width + x) * Consts.step;
@@ -89,6 +89,7 @@ namespace ContourDetection
 			if (!Consts.IsOriginalValue && val != 0) {
 				val = 1;
 			}
+			mask[x, y] = val == 1? true: false;
 			HsvToRgb(0, 0, val, ref newB, x, y);
 		}
 
@@ -103,12 +104,13 @@ namespace ContourDetection
 								   , targetData.Length);
 			target.UnlockBits(targetData1);
 			byte[] newTargetData = new byte[targetData.Length];
+			bool[,] mask = new bool[target.Size.Width, target.Size.Height];
 			if (Consts.IsAdapt) {
 				for (int i = 0; i < target.Size.Width; i++)
 				{
 					for (int j = 0; j < target.Size.Height; j++)
 					{
-						AdaptThreshold(ref targetData, i, j, ref newTargetData);
+						AdaptThreshold(ref targetData, i, j, ref newTargetData, ref mask);
 					}
 				}
 			} else {
@@ -117,16 +119,30 @@ namespace ContourDetection
 					for (int j = 0; j < target.Size.Height; j++)
 					{
 						var brightness = getValue(i, j, ref targetData);
+						mask[i, j] = brightness == 1? true: false ; 
 						HsvToRgb(0, 0, brightness, ref newTargetData, i, j);
 					}
 				}
 			}
+
+			var circles = FigureRecognizer.RecognizeCircles(ref mask, target.Size.Width, target.Size.Height);
 			
 			newTarget = new Bitmap(width, height, targetData1.Stride,
 				target.PixelFormat,
 				Marshal.UnsafeAddrOfPinnedArrayElement(newTargetData, 0));
-			
+			var graphics = Graphics.FromImage(newTarget);
+			foreach (var elem in circles)
+			{
+				DrawCircle(elem.Item1, elem.Item2, elem.Item3, graphics);
+			}
+
 			return newTarget;
+		}
+
+		private void DrawCircle(int x, int y, int r, Graphics g)
+		{
+			g.DrawEllipse(new Pen(Color.Red), x - r, y - r,
+					 2*r, 2*r);
 		}
 
 		private float getValue(int x, int y, ref byte[] b)

@@ -12,7 +12,7 @@ namespace ContourDetection
 		public static bool IsOriginalValue = false;
 		public static float filter = 0.1f;
 		public static int step = 4;
-		public static int thresholdWidnowSize = 10;
+		public static int thresholdWidnowSize = 5;
 
 		public static  int[][] SobelMatrix =
 		{
