@@ -23,7 +23,7 @@ namespace ContourDetection
 			height = target.Height;
 		}
 		
-		private void AdaptThreshold(ref byte[] b, int x, int y, ref byte[] newB, ref bool[,] mask)
+		private bool AdaptThreshold(ref byte[] b, int x, int y, ref byte[] newB)
 		{
 			
 			var originalCoord = (y * width + x) * Consts.step;
@@ -45,7 +45,7 @@ namespace ContourDetection
 					v = 1;
 				}				
 				HsvToRgb(0, 0, v, ref newB, x, y);
-				return;
+				return v == 1? true : false;
 			}
 			float max = float.MinValue;
 			float min = float.MaxValue;
@@ -89,8 +89,9 @@ namespace ContourDetection
 			if (!Consts.IsOriginalValue && val != 0) {
 				val = 1;
 			}
-			mask[x, y] = val == 1? true: false;
+			//mask[x, y] = 
 			HsvToRgb(0, 0, val, ref newB, x, y);
+			return val == 1 ? true : false;
 		}
 
 		internal Bitmap detect()
@@ -105,12 +106,15 @@ namespace ContourDetection
 			target.UnlockBits(targetData1);
 			byte[] newTargetData = new byte[targetData.Length];
 			bool[,] mask = new bool[target.Size.Width, target.Size.Height];
+			List<Point> points = new List<Point>();
 			if (Consts.IsAdapt) {
 				for (int i = 0; i < target.Size.Width; i++)
 				{
 					for (int j = 0; j < target.Size.Height; j++)
 					{
-						AdaptThreshold(ref targetData, i, j, ref newTargetData, ref mask);
+						var v = AdaptThreshold(ref targetData, i, j, ref newTargetData);
+						if(v)
+							points.Add(new Point(i, j));
 					}
 				}
 			} else {
@@ -119,21 +123,24 @@ namespace ContourDetection
 					for (int j = 0; j < target.Size.Height; j++)
 					{
 						var brightness = getValue(i, j, ref targetData);
+						if(brightness == 1)
+							points.Add(new Point(i, j));
 						mask[i, j] = brightness == 1? true: false ; 
 						HsvToRgb(0, 0, brightness, ref newTargetData, i, j);
 					}
 				}
 			}
 
-			var circles = FigureRecognizer.RecognizeCircles(ref mask, target.Size.Width, target.Size.Height);
-			
+			//var circles = FigureRecognizer.RecognizeCircles(ref mask, target.Size.Width, target.Size.Height);
+			var circles = FigureRecognizer.RecognizeCirclesFast(ref points, target.Size.Width, target.Size.Height);
 			newTarget = new Bitmap(width, height, targetData1.Stride,
 				target.PixelFormat,
 				Marshal.UnsafeAddrOfPinnedArrayElement(newTargetData, 0));
 			var graphics = Graphics.FromImage(newTarget);
 			foreach (var elem in circles)
 			{
-				DrawCircle(elem.Item1, elem.Item2, elem.Item3, graphics);
+				if((float)elem.dotCount / 360 > 0.8)
+					DrawCircle(elem.X, elem.Y, elem.R, graphics);
 			}
 
 			return newTarget;

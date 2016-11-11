@@ -8,10 +8,70 @@ using System.Threading.Tasks;
 
 namespace ContourDetection
 {
+	public class Circle
+	{
+		public int X;
+		public int Y;
+		public int R;
+		public int dotCount;
+		bool[] angles = new bool[360];
+		public void addDot(int angle)
+		{
+			if(angles[angle])
+			{
+				angles[angle] = false;
+				dotCount++;
+			}
+			
+		}
+	}
+
 	static class FigureRecognizer
 	{
+		public static List<Circle> RecognizeCirclesFast(ref List<Point> points, int width, int height)
+		{
+			Circle[,,] circles = new Circle[width, height, 80];
+			List<Circle> activeCicles = new List<Circle>();
+			var i = 0;
+			foreach(var point in points)
+			{
+				Debug.WriteLine($"Point {i} of {points.Count}");
+				i++;
+				for (int r = 20; r < 100; r++)
+				{
+					
+					for (int fi = 0; fi < 360; fi += 1)
+					{
+						var x = point.X + r * Math.Cos(fi * Math.PI / 180);
+						var y = point.Y + r * Math.Sin(fi * Math.PI / 180);
+						if (
+								x < 0 ||
+								x > width - 1 ||
+								y < 0 ||
+								y > height - 1
+							)
+						{
+							continue;
+						}
+						var curr = circles[(int)x, (int)y, r-20];
+						if (Contains(point, (int)x, (int)y, width, height))
+						{
+							curr.addDot(fi);
+							if (!activeCicles.Contains(curr))
+							{
+								activeCicles.Add(curr);
+							}
+						}
+						
+					}
+				}
+			}
+			return activeCicles;
+		}
+
 		public static List<Tuple<int, int, int>> RecognizeCircles(ref bool[,] points, int width, int height)
 		{
+			
 			List<Tuple<int, int, int>> circles = new List<Tuple<int, int, int>>();
 			int maxR = Math.Min(width, height);
 			for (int r = 20; r <= 100; r++)
@@ -47,6 +107,11 @@ namespace ContourDetection
 				}
 			}
 			return circles;
+		}
+
+		private static bool Contains(Point point, int x, int y, int width, int height)
+		{
+			return Math.Abs(point.X - x) <= 2 && Math.Abs(point.Y - y) <= 2;
 		}
 
 		private static bool Contains(bool[,] points, int x, int y, int width, int height)
