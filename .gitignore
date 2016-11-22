@@ -74,3 +74,6 @@ WeatherPrediction/WeatherPrediction/obj/Debug/TemporaryGeneratedFile_036C0B5B-14
 WeatherPrediction/WeatherPrediction/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 WeatherPrediction/WeatherPrediction/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
 WeatherPrediction/WeatherPrediction/obj/Debug/WeatherPrediction.csproj.FileListAbsolute.txt
+WeatherPrediction/WeatherPrediction/bin/Debug/WeatherPrediction.exe.config
+WeatherPrediction/WeatherPrediction/bin/Debug/WeatherPrediction.vshost.exe.config
+WeatherPrediction/WeatherPrediction/bin/Debug/WeatherPrediction.vshost.exe.manifest
