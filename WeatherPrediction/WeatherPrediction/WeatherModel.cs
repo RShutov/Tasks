@@ -103,5 +103,18 @@ namespace WeatherPrediction
 				RRR.ToString(),
 			});
 		}
+
+		public static double ToNormal(WeatherModel item1, WeatherModel item2)
+		{
+			return 
+				Math.Pow(item1.T - item2.T, 2) +
+				Math.Pow(item1.Po - item2.Po, 2) +
+				Math.Pow(item1.P - item2.P, 2) +
+				Math.Pow(item1.Pa - item2.Pa, 2) +
+				Math.Pow(item1.U  - item2.U, 2) +
+				Math.Pow(item1.Ef - item2.Ef, 2) +
+				Math.Pow(item1.Td - item2.Td, 2) +
+				Math.Pow(item1.RRR - item2.RRR, 2);
+		}
 	}
 }
