@@ -37,7 +37,7 @@ namespace WeatherPrediction
 						fields[23],
 					};
 					var model = new WeatherModel(modelFields);
-					if (model.Date.Year == 2016) {
+					if (model.Date.Split(' ')[0].EndsWith("2016")) {
 						trainingSet.Add(model);
 						Console.WriteLine(model.ToString());
 					} else {

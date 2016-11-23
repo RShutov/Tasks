@@ -13,7 +13,7 @@ namespace WeatherPrediction
 		/// <para>ДАта и время</para>
 		/// <seealso cref="WeatherPrediction.WeatherModel"/>
 		/// </summary>
-		public DateTime Date { get; set; }
+		public string Date { get; set; }
 
 		/// <summary>DoWork is a method in the TestClass class.
 		/// <para>Температура воздуха</para>
@@ -64,14 +64,10 @@ namespace WeatherPrediction
 		/// </summary>
 		public double RRR { get; set; }
 
-		public static string DateFmt = "dd.MM.yyyy HH:mm";
-
 		public WeatherModel(string[] data)
 		{
 			try {
-				Date = DateTime.ParseExact(
-					data[0], DateFmt, 
-					System.Globalization.CultureInfo.InvariantCulture);
+				Date = data[0];
 				T = TryParse(data[1]);
 				Po  = TryParse(data[2]);
 				P   = TryParse(data[3]);
@@ -97,7 +93,7 @@ namespace WeatherPrediction
 		public override string ToString()
 		{
 			return string.Join(" ", new string[]{
-				Date.ToString(DateFmt),
+				Date,
 				T.ToString(),
 				Po.ToString(),
 				Pa.ToString(),
