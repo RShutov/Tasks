@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WeatherPrediction
 {
-	class WeatherModel
+	public class WeatherModel
 	{
 		/// <summary>DoWork is a method in the TestClass class.
 		/// <para>ДАта и время</para>
