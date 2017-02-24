@@ -36,13 +36,23 @@ namespace ContourDetection
 			}	
 		}
 
-		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		private void DetectCirclesStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var dialog = new OpenFileDialog();
 			if (dialog.ShowDialog() == DialogResult.OK) {
 				var bmp = new Bitmap(Bitmap.FromFile(dialog.FileName));
-				ContourDetector detector = new ContourDetector(bmp);
-				var newPicture =  detector.detect();
+				var newPicture = ContourDetector.DetectCircles(bmp);
+				this.pictureBox1.Image = newPicture;
+				//this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+			}
+		}
+
+		private void DetectContourToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var dialog = new OpenFileDialog();
+			if (dialog.ShowDialog() == DialogResult.OK) {
+				var bmp = new Bitmap(Bitmap.FromFile(dialog.FileName));
+				var newPicture = ContourDetector.DetectContour(bmp);
 				this.pictureBox1.Image = newPicture;
 				//this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 			}

@@ -78,15 +78,16 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
 			this.openToolStripMenuItem.Text = "Обнаружить окружности";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.DetectCirclesStripMenuItem_Click);
 			// 
 			// обнаружитьКонтурToolStripMenuItem
 			// 
 			this.DetectContourToolStripMenuItem.Name = "обнаружитьКонтурToolStripMenuItem";
 			this.DetectContourToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
 			this.DetectContourToolStripMenuItem.Text = "Обнаружить контур";
+			this.DetectContourToolStripMenuItem.Click += new System.EventHandler(this.DetectContourToolStripMenuItem_Click);
 			// 
 			// ConourDetectionForm
 			// 

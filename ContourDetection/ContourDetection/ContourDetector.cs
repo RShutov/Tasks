@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ImageRecognizeHelper;
+using ImageRecognizeHelper.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -10,20 +12,10 @@ using System.Threading.Tasks;
 
 namespace ContourDetection
 {
-	class ContourDetector
+	public static class ContourDetector
 	{
-		private Bitmap target;
-		private int width;
-		private int height;
-
-		public ContourDetector(Bitmap target)
-		{
-			this.target = target;
-			width = target.Width;
-			height = target.Height;
-		}
 		
-		private bool AdaptThreshold(ref byte[] b, int x, int y, ref byte[] newB)
+		private static bool AdaptThreshold(ref byte[] b, int x, int y, ref byte[] newB, int width, int height)
 		{
 			
 			var originalCoord = (y * width + x) * Consts.step;
@@ -44,7 +36,7 @@ namespace ContourDetection
 				{
 					v = 1;
 				}				
-				HsvToRgb(0, 0, v, ref newB, x, y);
+				HsvToRgb(0, 0, v, ref newB, x, y, width, height);
 				return v == 1? true : false;
 			}
 			float max = float.MinValue;
@@ -89,70 +81,81 @@ namespace ContourDetection
 			if (!Consts.IsOriginalValue && val != 0) {
 				val = 1;
 			}
-			//mask[x, y] = 
-			HsvToRgb(0, 0, val, ref newB, x, y);
+			HsvToRgb(0, 0, val, ref newB, x, y, width, height);
 			return val == 1 ? true : false;
 		}
 
-		internal Bitmap detect()
+		public static List<Point> DetectContourPoints(Bitmap target)
 		{
-			
-			var newTarget = new Bitmap(target.Width, target.Height);
-			BitmapData targetData1 = target.LockBits(new Rectangle(0, 0, target.Width, target.Height),
-			System.Drawing.Imaging.ImageLockMode.ReadWrite, target.PixelFormat);
+			BitmapData targetData1 = target.LockBits(new Rectangle(0, 0, target.Width, target.Height), ImageLockMode.ReadWrite, target.PixelFormat);
 			byte[] targetData = new byte[targetData1.Stride * targetData1.Height];
-			System.Runtime.InteropServices.Marshal.Copy(targetData1.Scan0, targetData, 0
-								   , targetData.Length);
+			Marshal.Copy(targetData1.Scan0, targetData, 0, targetData.Length);
 			target.UnlockBits(targetData1);
 			byte[] newTargetData = new byte[targetData.Length];
 			bool[,] mask = new bool[target.Size.Width, target.Size.Height];
 			List<Point> points = new List<Point>();
 			if (Consts.IsAdapt) {
-				for (int i = 0; i < target.Size.Width; i++)
-				{
-					for (int j = 0; j < target.Size.Height; j++)
-					{
-						var v = AdaptThreshold(ref targetData, i, j, ref newTargetData);
-						if(v)
+				points = ThresholdAdapter.Adapt(target, Consts.step, Consts.thresholdWidnowSize, Consts.filter);
+			}
+			else {
+				for (int i = 0; i < target.Size.Width; i++) {
+					for (int j = 0; j < target.Size.Height; j++) {
+						var brightness = GetValue(i, j, ref targetData, target.Width, target.Height);
+						if (brightness == 1)
 							points.Add(new Point(i, j));
-					}
-				}
-			} else {
-				for (int i = 0; i < target.Size.Width; i++)
-				{
-					for (int j = 0; j < target.Size.Height; j++)
-					{
-						var brightness = getValue(i, j, ref targetData);
-						if(brightness == 1)
-							points.Add(new Point(i, j));
-						mask[i, j] = brightness == 1? true: false ; 
-						HsvToRgb(0, 0, brightness, ref newTargetData, i, j);
+						mask[i, j] = brightness == 1 ? true : false;
+						HsvToRgb(0, 0, brightness, ref newTargetData, i, j, target.Width, target.Height);
 					}
 				}
 			}
+			return points;
+		}
 
-			//var circles = FigureRecognizer.RecognizeCircles(ref mask, target.Size.Width, target.Size.Height);
+		public static Bitmap DetectCircles(Bitmap target)
+		{
+			var newTarget = new Bitmap(target.Width, target.Height);
+			var points = DetectContourPoints(target);
+			BitmapData targetData1 = target.LockBits(
+				new Rectangle(0, 0, target.Width, target.Height), 
+				ImageLockMode.ReadWrite, target.PixelFormat);
+		
+			byte[] targetData = new byte[targetData1.Stride * targetData1.Height];
+			byte[] newTargetData = new byte[targetData.Length];
 			var circles = FigureRecognizer.RecognizeCirclesFast(ref points, target.Size.Width, target.Size.Height);
-			newTarget = new Bitmap(width, height, targetData1.Stride,
+			newTarget = new Bitmap(target.Width, target.Height, targetData1.Stride,
 				target.PixelFormat,
 				Marshal.UnsafeAddrOfPinnedArrayElement(newTargetData, 0));
 			var graphics = Graphics.FromImage(newTarget);
-			foreach (var elem in circles)
-			{
-				if((float)elem.dotCount / 360 > 0.8)
-					DrawCircle(elem.X, elem.Y, elem.R, graphics);
+
+			foreach (var elem in points) {
+				newTarget.SetPixel(elem.X, elem.Y, Color.Black);
 			}
 
+			foreach (var elem in circles) {
+				if ((float)elem.dotCount / 360 > 0.8)
+					DrawCircle(elem.X, elem.Y, elem.R, graphics);
+			}
+			target.UnlockBits(targetData1);
 			return newTarget;
 		}
 
-		private void DrawCircle(int x, int y, int r, Graphics g)
+		public static Bitmap DetectContour(Bitmap target)
+		{
+			var points = DetectContourPoints(target);
+			var newTarget = new Bitmap(target.Width, target.Height);
+			foreach (var elem in points) {
+				newTarget.SetPixel(elem.X, elem.Y, Color.Black);
+			}
+			return newTarget;
+		}
+
+		private static void DrawCircle(int x, int y, int r, Graphics g)
 		{
 			g.DrawEllipse(new Pen(Color.Red), x - r, y - r,
 					 2*r, 2*r);
 		}
 
-		private float getValue(int x, int y, ref byte[] b)
+		private static float GetValue(int x, int y, ref byte[] b, int width, int height)
 		{
 			float sumX = 0;
 			float sumY = 0;
@@ -161,7 +164,7 @@ namespace ContourDetection
 				y - Consts.SobelMatrix.Length / 2 < 0 || 
 				y + Consts.SobelMatrix.Length / 2 > height - 1
 			){
-				return TryGetPixel(x, y, ref b);
+				return TryGetPixel(x, y, ref b, width);
 			}
 			for (int i = 0; i < Consts.SobelMatrix.Length; i++)
 			{
@@ -171,19 +174,21 @@ namespace ContourDetection
 						TryGetPixel(
 							x - Consts.SobelMatrix.Length / 2 + i, 
 							y - Consts.SobelMatrix[0].Length / 2 + j, 
-							ref b);
+							ref b,
+							width);
 					sumX += Consts.SobelMatrixTransporant[i][j] * 
 						TryGetPixel(
 							x - Consts.SobelMatrix.Length / 2 + i, 
 							y - Consts.SobelMatrix[0].Length / 2 + j, 
-							ref b);
+							ref b,
+							width);
 				}
 			}
 			var val = (float)Math.Sqrt(sumY * sumY + sumX * sumX);
 			return val >= Consts.filter ? 1 : 0;
 		}
 
-		private float TryGetPixel(int v1, int v2, ref byte[] b)
+		private static float TryGetPixel(int v1, int v2, ref byte[] b, int width)
 		{
 			var coord = (v2 * width  +  v1) * Consts.step;
 			return Color.FromArgb(
@@ -194,7 +199,7 @@ namespace ContourDetection
 			).GetBrightness();
 		}
 
-		void HsvToRgb(double h, double S, double V, ref byte[] source, int x, int y)
+		private static void HsvToRgb(double h, double S, double V, ref byte[] source, int x, int y, int width, int height)
 		{
 			int r;
 			int g;
@@ -282,22 +287,14 @@ namespace ContourDetection
 						break;
 				}
 			}
-			r = Clamp((int)(R * 255.0));
-			g = Clamp((int)(G * 255.0));
-			b = Clamp((int)(B * 255.0));
+			r = ImageHelpers.Clamp((int)(R * 255.0));
+			g = ImageHelpers.Clamp((int)(G * 255.0));
+			b = ImageHelpers.Clamp((int)(B * 255.0));
 			var coord = (y * width + x) * Consts.step;
 			source[coord + 3] = 255;
 			source[coord] = (byte)r;
 			source[coord + 1] = (byte)g;
 			source[coord  + 2] = (byte)b; 
-		}
-
-
-		int Clamp(int i)
-		{
-			if (i < 0) return 0;
-			if (i > 255) return 255;
-			return i;
 		}
 	}
 }

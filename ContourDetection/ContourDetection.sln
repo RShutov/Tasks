@@ -5,7 +5,13 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContourDetection", "ContourDetection\ContourDetection.csproj", "{7AA2B6C0-0290-4606-A9D3-D4FAA04ADFB8}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ImageRecognizeHelper", "ImageRecognizeHelper\ImageRecognizeHelper.shproj", "{27CDC3F3-995D-468A-9850-E737C9CDAEF3}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ImageRecognizeHelper\ImageRecognizeHelper.projitems*{27cdc3f3-995d-468a-9850-e737c9cdaef3}*SharedItemsImports = 13
+		ImageRecognizeHelper\ImageRecognizeHelper.projitems*{7aa2b6c0-0290-4606-a9d3-d4faa04adfb8}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
