@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageRecognizeHelper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,12 @@ namespace ContourDetection
 {
 	public static class Consts
 	{
-		public static bool IsAdapt = true;
-		public static bool IsOriginalValue = false;
-		public static float filter = 0.1f;
-		public static int step = 4;
-		public static int thresholdWidnowSize = 5;
+		public static ThresholdParams ThresholdParams = new ThresholdParams {
+			IsAdapt = true,
+			Filter = 0.1f,
+			Step = 4,
+			WidnowSize = 5,
+		};
 
 		public static  int[][] SobelMatrix =
 		{

@@ -39,23 +39,20 @@
 			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLight;
+			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox1.Image = global::ContourDetection.Properties.Resources.minimal_06_512;
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pictureBox1.Location = new System.Drawing.Point(0, 28);
+			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(231, 217);
-			//this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+			this.pictureBox1.Size = new System.Drawing.Size(231, 247);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			// 
 			// toolStrip1
 			// 
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(231, 25);
@@ -66,8 +63,8 @@
 			// 
 			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.openToolStripMenuItem,
-			this.DetectContourToolStripMenuItem});
+            this.openToolStripMenuItem,
+            this.DetectContourToolStripMenuItem});
 			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
 			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -78,14 +75,14 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-			this.openToolStripMenuItem.Text = "Обнаружить окружности";
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.DetectCirclesStripMenuItem_Click);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+			this.openToolStripMenuItem.Text = "Обнаружить линии";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.DetectLinesStripMenuItem_Click);
 			// 
-			// обнаружитьКонтурToolStripMenuItem
+			// DetectContourToolStripMenuItem
 			// 
-			this.DetectContourToolStripMenuItem.Name = "обнаружитьКонтурToolStripMenuItem";
-			this.DetectContourToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+			this.DetectContourToolStripMenuItem.Name = "DetectContourToolStripMenuItem";
+			this.DetectContourToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
 			this.DetectContourToolStripMenuItem.Text = "Обнаружить контур";
 			this.DetectContourToolStripMenuItem.Click += new System.EventHandler(this.DetectContourToolStripMenuItem_Click);
 			// 
@@ -99,6 +96,7 @@
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.pictureBox1);
 			this.Name = "ConourDetectionForm";
+			this.ShowIcon = false;
 			this.Text = "Распознование контуров";
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.toolStrip1.ResumeLayout(false);

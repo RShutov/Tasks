@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using Recognizers;
+using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ContourDetection
@@ -18,7 +12,6 @@ namespace ContourDetection
 		public ConourDetectionForm()
 		{
 			InitializeComponent();
-
 		}
 
 		private void toolStripDropDownButton1_Click(object sender, EventArgs e)
@@ -36,14 +29,15 @@ namespace ContourDetection
 			}	
 		}
 
-		private void DetectCirclesStripMenuItem_Click(object sender, EventArgs e)
+		private void DetectLinesStripMenuItem_Click(object sender, EventArgs e)
 		{
+
 			var dialog = new OpenFileDialog();
 			if (dialog.ShowDialog() == DialogResult.OK) {
 				var bmp = new Bitmap(Bitmap.FromFile(dialog.FileName));
-				var newPicture = ContourDetector.DetectCircles(bmp);
+				var newPicture = FigureRecognizer.DetectLines(bmp, Consts.ThresholdParams);
 				this.pictureBox1.Image = newPicture;
-				//this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+				this.pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 			}
 		}
 
@@ -52,9 +46,9 @@ namespace ContourDetection
 			var dialog = new OpenFileDialog();
 			if (dialog.ShowDialog() == DialogResult.OK) {
 				var bmp = new Bitmap(Bitmap.FromFile(dialog.FileName));
-				var newPicture = ContourDetector.DetectContour(bmp);
+				var newPicture = FigureRecognizer.DetectContour(bmp, Consts.ThresholdParams);
 				this.pictureBox1.Image = newPicture;
-				//this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+				this.pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 			}
 		}
 	}

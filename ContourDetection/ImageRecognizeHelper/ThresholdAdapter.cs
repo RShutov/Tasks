@@ -7,24 +7,31 @@ using System.Text;
 
 namespace ImageRecognizeHelper
 {
+	public class ThresholdParams
+	{
+		public bool IsAdapt { get; set; }
+		public float Filter { get; set; }
+		public int Step { get; set; }
+		public int WidnowSize { get; set; }
+	}
+
 	public class ThresholdAdapter
 	{
 		private static bool AdaptThreshold(
 			ref byte[] bitmap, 
 			int x,
 			int y,
-			int step,
-			int thresholdWidnowSize,
+			ThresholdParams param,
 			double threshold,
 			int width,
 			int height
 		) {
 
-			var originalCoord = (y * width + x) * step;
-			if (x - thresholdWidnowSize / 2 < 0 ||
-				x + thresholdWidnowSize / 2 > width - 1 ||
-				y - thresholdWidnowSize / 2 < 0 ||
-				y + thresholdWidnowSize / 2 > height - 1
+			var originalCoord = (y * width + x) * param.Step;
+			if (x - param.WidnowSize / 2 < 0 ||
+				x + param.WidnowSize / 2 > width - 1 ||
+				y - param.WidnowSize / 2 < 0 ||
+				y + param.WidnowSize / 2 > height - 1
 			) {
 				var v = Color.FromArgb(
 								bitmap[originalCoord + 3],
@@ -40,10 +47,10 @@ namespace ImageRecognizeHelper
 			float min = float.MaxValue;
 			float originalColor = 0;
 
-			for (int i = 0; i < thresholdWidnowSize; i++) {
-				for (int j = 0; j < thresholdWidnowSize; j++) {
-					var coord = ((y - thresholdWidnowSize / 2 + j) * width +
-						(x - thresholdWidnowSize / 2 + i)) * step;
+			for (int i = 0; i < param.WidnowSize; i++) {
+				for (int j = 0; j < param.WidnowSize; j++) {
+					var coord = ((y - param.WidnowSize / 2 + j) * width +
+						(x - param.WidnowSize / 2 + i)) * param.Step;
 					if (coord == originalCoord) {
 						originalColor = Color.FromArgb(
 							bitmap[coord + 3],
@@ -74,8 +81,9 @@ namespace ImageRecognizeHelper
 			return val == 0 ? false : true;
 		}
 
-		public static List<Point> Adapt(Bitmap bitmap, int step = 4, int size = 5, double threshold = 0.1)
+		public static List<Point> Adapt(Bitmap bitmap, ThresholdParams param,/* int step = 4, int size = 5,*/ double threshold = 0.1)
 		{
+			var startTime = DateTime.Now;
 			var newTarget = new Bitmap(bitmap.Width, bitmap.Height);
 			BitmapData bitmapData1 = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
 			System.Drawing.Imaging.ImageLockMode.ReadWrite, bitmap.PixelFormat);
@@ -85,10 +93,11 @@ namespace ImageRecognizeHelper
 			List<Point> points = new List<Point>();
 			for (int i = 0; i < bitmap.Size.Width; i++) {
 				for (int j = 0; j < bitmap.Size.Height; j++) {
-					if (AdaptThreshold(ref bitmapData,i, j, step, size, threshold, bitmap.Width, bitmap.Height))
+					if (AdaptThreshold(ref bitmapData,i, j, param, threshold, bitmap.Width, bitmap.Height))
 						points.Add(new Point(i, j));
 				}
 			}
+			Console.WriteLine("[Threshold] Elapsed time:" + (DateTime.Now - startTime).ToString());
 			return points;
 		}
 	}

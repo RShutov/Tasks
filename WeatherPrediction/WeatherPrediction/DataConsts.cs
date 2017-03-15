@@ -8,7 +8,7 @@ namespace WeatherPrediction
 {
 	public static class DataConsts
 	{
-		public static int RowCount = 6000;
+		public static int RowCount = 30000;
 		public static bool Echo = true;
 	}
 }
